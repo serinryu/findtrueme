@@ -1,0 +1,23 @@
+{
+  "local": {
+    "username": "root",
+    "password": "0000",
+    "database": "findtrueme",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "real": { 
+    "username": "",
+    "password": "",
+    "database": "",
+    "host": "",
+    "dialect": ""
+  },
+  "dev": { 
+    "username": "",
+    "password": "",
+    "database": "",
+    "host": "",
+    "dialect": ""
+  }
+}

@@ -1,0 +1,10 @@
+extends ../layout.pug
+block content 
+    h1=post.title
+    p=post.content
+
+    nav 
+        a(href='/posts') Back
+        a(href=`/posts/${post.id}/edit`) Edit
+        form(method='post', action=`/posts/${post.id}/?_method=PATCH`)
+            input(type='submit', value='Delete')
