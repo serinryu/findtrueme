@@ -7,19 +7,22 @@ API
 
 [user routers]
 GET /users/{:id}
-POST /users -> create user
-POST /users/{:id}/follow  -> follow or unfollow user
-PUT /users/{:id} -> edit user
 PATCH /users/{:id} -> delete user
+POST /users/{:id} -> create user
+GET /users/{:id}/edit -> edit user form
+PUT /users/{:id}/edit -> edit user
+POST /users/{:id}/follow  -> follow or unfollow user
 
 [posts routers]
 GET /posts 
 GET /posts/search -> search
-GET /posts/{:id} -> select one post
-POST /posts -> create post
-POST /posts/{:id}/like -> like or unlike post
-PUT /posts/{id} -> edit post
+GET /posts/upload -> upload post form
+POST /posts/upload -> upload post
+GET /posts/{:id} -> detail 
 PATCH /posts/{:id} -> delete post
+GET /posts/{:id}/edit -> edit post form
+PUT /posts/{id}/edit -> edit post
+POST /posts/{:id}/like -> like or unlike post
 
 [comments routers]
 POST /comments
