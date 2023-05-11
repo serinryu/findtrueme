@@ -14,6 +14,7 @@ const User = (sequelize, DataTypes) => {
 			password: {
 				type: DataTypes.STRING(100),
 				allowNull: false,
+
 			},
 			status: {
 				type: DataTypes.BOOLEAN,
