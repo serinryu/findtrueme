@@ -16,16 +16,11 @@ const User = (sequelize, DataTypes) => {
 				allowNull: false,
 
 			},
-			status: {
-				type: DataTypes.BOOLEAN,
-				allowNull: false,
-				defaultValue: true,
-			}
 		},
 		{
 			sequelize,
             timestamps: true,
-            paranoid: false,
+            paranoid: true,
             charset: 'utf8',
             collate: 'utf8_general_ci',
             modelName: 'User',

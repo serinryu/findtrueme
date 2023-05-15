@@ -83,15 +83,11 @@ export const editPost = async(req,res) => {
     const { id } = req.params;
     const { title, content } = req.body;
     try{
-        const post = await Post.findOne({
-            where: {
-                id
-            }
-        });
-        await post.update({
+        await Post.update({
             title,
             content
-        });
+        }, {where : {id}}
+        );
         return res.redirect(`/posts/${id}`);
     } catch(error){
         console.log(error);
@@ -101,12 +97,11 @@ export const editPost = async(req,res) => {
 export const deletePost = async(req,res) => {
     const { id } = req.params;
     try{
-        const post = await Post.findOne({
+        await Post.destroy({
             where: {
                 id
             }
-        });
-        await post.destroy(); // later : change status
+        });        
         return res.redirect('/posts');
     } catch(error){
         console.log(error);

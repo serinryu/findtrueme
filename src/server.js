@@ -50,7 +50,7 @@ app.use('/posts', postRouter);
 app.use('/comments', commentRouter);
 
 db.sequelize
-    .sync()
+    .sync({ alter: true, force: true })
     .then(() => {
         console.log('database connected!')
     })
