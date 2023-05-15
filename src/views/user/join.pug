@@ -1,0 +1,9 @@
+extends ../layout.pug
+
+block content 
+    form(method="POST")
+        input(name="email", placeholder="email", type="text", required)
+        input(name="username", placeholder="username", type="text", required)
+        input(name="password", placeholder="password", type="text", required)
+        input(name="password2", placeholder="password confirmation", type="text", required)
+        input(type="submit", value="Join")
