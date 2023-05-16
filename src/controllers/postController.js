@@ -3,12 +3,16 @@ import { Op } from 'sequelize';
 
 const Post = db.Post;
 
+export const home = (req,res) => {
+    return res.render('../views/post/home.pug', {pageTitle: 'Home'});
+}
+
 export const board = async(req,res) => {
     try{
         console.log(req.user);
         console.log(req.isAuthenticated());
         const posts = await Post.findAll();
-        return res.render('../views/post/board.pug', {pageTitle: 'Home', posts});
+        return res.render('../views/post/board.pug', {pageTitle: 'Board', posts});
     } catch(error){
         console.log(error);
     }

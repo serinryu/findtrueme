@@ -1,7 +1,8 @@
 import express from "express";
+import { home } from "../controllers/postController.js";
 
 const globalRouter = express.Router();
 
-globalRouter.get('/', (req,res) => res.send('Home'));
+globalRouter.get('/', home);
 
 export default globalRouter;
