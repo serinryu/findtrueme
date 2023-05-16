@@ -23,7 +23,7 @@ export const postJoin = async (req, res, next) => {
             username,
             password: hash,
         });
-        return res.redirect('/');
+        return res.redirect('/login');
     } catch(error) {
         console.error(error);
         return next(error);
@@ -48,7 +48,6 @@ export const postLogin = (req, res, next) => {
                 console.error(loginError);
                 return next(loginError);
             }
-            console.log(req.user);
             return res.redirect('/posts');
         });
     }

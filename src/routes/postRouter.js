@@ -1,5 +1,6 @@
 import express from "express";
 import { board, getUploadPost, postUploadPost, filterPost, getDetailPost, editPost, deletePost, geteditPost } from "../controllers/postController.js";
+import { isLoggedIn, isNotLoggedIn } from '../middlewares/index.js';
 
 // /posts
 const postRouter = express.Router();
@@ -7,6 +8,7 @@ const postRouter = express.Router();
 postRouter.get('/', board)
 postRouter.get('/search', filterPost);
 postRouter.route('/upload')
+    .all(isLoggedIn)
     .get(getUploadPost)
     .post(postUploadPost);
 
@@ -15,6 +17,7 @@ postRouter.route('/:id')
     .patch(deletePost);
     
 postRouter.route('/:id/edit')
+    .all(isLoggedIn)
     .get(geteditPost)
     .put(editPost)
     

@@ -9,8 +9,6 @@ export const home = (req,res) => {
 
 export const board = async(req,res) => {
     try{
-        console.log(req.user);
-        console.log(req.isAuthenticated());
         const posts = await Post.findAll();
         return res.render('../views/post/board.pug', {pageTitle: 'Board', posts});
     } catch(error){
@@ -31,7 +29,8 @@ export const postUploadPost = async(req,res) => {
     try{
         const newpost = await Post.create({
             title,
-            content
+            content,
+            UserId: req.user.id
         });
         return res.redirect('/posts');
     } catch(error){
@@ -63,7 +62,8 @@ export const getDetailPost = async(req,res) => {
                 id
             }
         });
-        return res.render('../views/post/detail.pug', {pageTitle: `Title : ${post.title}`, post});
+        const user = await post.getUser();
+        return res.render('../views/post/detail.pug', {pageTitle: `Title : ${post.title}`, post, user});
     } catch(error){
         console.log(error);
     }
@@ -77,12 +77,14 @@ export const geteditPost = async(req,res) => {
                 id
             }
         });
+        if(post.UserId !== req.user.id){
+            return res.redirect('/posts');
+        }
         return res.render('../views/post/edit.pug', {pageTitle: `Edit : ${post.title}`, post});
     } catch(error){
         console.log(error);
     }
 }
-
 
 export const editPost = async(req,res) => {
     const { id } = req.params;

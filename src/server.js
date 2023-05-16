@@ -5,17 +5,19 @@ import passport from 'passport';
 import * as dotenv from 'dotenv';
 import methodOverride from 'method-override';
 
+import db from './models/index.js';
 import session from 'express-session';
 import RedisStore from "connect-redis";
 import {createClient} from "redis";
+import passportConfig from './passport/index.js';
+import { localsMiddleware } from './middlewares/index.js';
 
 import globalRouter from './routes/globalRouter.js';
 import authRouter from './routes/authRouter.js';
 import userRouter from './routes/userRouter.js';
 import postRouter from './routes/postRouter.js';
 import commentRouter from './routes/commentRouter.js';
-import db from './models/index.js';
-import passportConfig from './passport/index.js';
+
 
 dotenv.config();
 const app = express();
@@ -54,6 +56,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(localsMiddleware)
 
 app.use('/', globalRouter);
 app.use('/', authRouter);
