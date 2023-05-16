@@ -8,7 +8,6 @@ API
 [user routers]
 GET /users/{:id}
 PATCH /users/{:id} -> delete user
-POST /users/{:id} -> create user
 GET /users/{:id}/edit -> edit user form
 PUT /users/{:id}/edit -> edit user
 POST /users/{:id}/follow  -> follow or unfollow user

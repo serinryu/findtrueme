@@ -3,10 +3,13 @@ header
     a(href='/') Home
   li 
     a(href='/posts') Board
-  li
-    a(href='/login') Login
-  li
-    a(href='/join') Join
-  li
-    a(href='/logout') Logout
+
   h1=pageTitle
+
+  if loggedIn
+    p Logged in as #{loggedInUser.username}
+    a(href='/logout') Logout
+  else
+    p Not logged in
+    a(href='/login') Login
+    a(href='/join') Join
