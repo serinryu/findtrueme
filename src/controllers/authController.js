@@ -3,31 +3,6 @@ import passport from 'passport';
 import db from '../models/index.js';
 const User = db.User;
 
-export const getLogin = (req, res) => {
-    res.render('../views/user/login', { title: 'Login' });
-};
-
-export const postLogin = (req, res, next) => {
-    passport.authenticate('local', (authError, user, info) => {
-        if(authError) {
-            console.error(authError);
-            return next(authError);
-        }
-        if(!user) {
-            return res.redirect(`/?loginError=${info.message}`);
-        }
-        return req.login(user, (loginError) => {
-            if(loginError) {
-                console.error(loginError);
-                return next(loginError);
-            }
-            console.log(req.user);
-            return res.redirect('/posts');
-        });
-    }
-    )(req, res, next); 
-};
-
 export const getJoin = (req, res) => {
     res.render('../views/user/join', { title: 'Join' });
 }
@@ -54,6 +29,31 @@ export const postJoin = async (req, res, next) => {
         return next(error);
     }
 }
+
+export const getLogin = (req, res) => {
+    res.render('../views/user/login', { title: 'Login' });
+};
+
+export const postLogin = (req, res, next) => {
+    passport.authenticate('local', (authError, user, info) => {
+        if(authError) {
+            console.error(authError);
+            return next(authError);
+        }
+        if(!user) {
+            return res.redirect(`/?loginError=${info.message}`);
+        }
+        return req.login(user, (loginError) => {
+            if(loginError) {
+                console.error(loginError);
+                return next(loginError);
+            }
+            console.log(req.user);
+            return res.redirect('/posts');
+        });
+    }
+    )(req, res, next); 
+};
 
 export const logout = (req, res, next) => {
     req.logout(function(err) {

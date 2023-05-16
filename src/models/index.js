@@ -4,14 +4,16 @@ import Post from "./post.js";
 import Hashtag from "./hashtag.js";
 import Comment from "./comment.js";
 import Image from "./image.js";
-import Config from '../config/config.json' assert {type:'json'};
+import Config from "../config/config.js";
 
-const env = process.env.NODE_ENV || 'local';
+const env = process.env.NODE_ENV || 'development';
 const config = Config[env];
 const db = {};
 const sequelize = new Sequelize(
   config.database, config.username, config.password, config,
 );
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
 
 db.User = User(sequelize, Sequelize);
 db.Post = Post(sequelize, Sequelize);
@@ -24,8 +26,5 @@ Object.keys(db).forEach((modelName) => {
 		db[modelName].associate(db);
 	}
 });
-
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
 
 export default db;

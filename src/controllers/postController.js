@@ -5,7 +5,8 @@ const Post = db.Post;
 
 export const board = async(req,res) => {
     try{
-        //console.log(req.user);
+        console.log(req.user);
+        console.log(req.isAuthenticated());
         const posts = await Post.findAll();
         return res.render('../views/post/board.pug', {pageTitle: 'Home', posts});
     } catch(error){
