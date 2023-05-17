@@ -2,3 +2,8 @@ extends ../layout.pug
 block content 
     h3=user.name 
     p=user.email
+
+    if user.id == loggedInUser.id 
+        a(href=`/users/${user.id}/edit`) Edit my profile
+        form(method='post', action=`/users/${user.id}/?_method=PATCH`)
+            input(type='submit', value='Delete my account')

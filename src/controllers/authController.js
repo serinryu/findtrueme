@@ -13,9 +13,13 @@ export const postJoin = async (req, res, next) => {
         return res.redirect('/join?joinError=Passwords do not match.');
     }
     try {
-        const exUser = await User.findOne({ where: { email } });
+        const exUser = await User.findAll({ 
+            where: { 
+                email, username 
+            }
+        });
         if(exUser) {
-            return res.redirect('/join?joinError=This email is already in use.');
+            return res.redirect('/join?joinError=This email or username is already in use.');
         }
         const hash = await bcrypt.hash(password, 12);
         await User.create({

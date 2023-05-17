@@ -27,7 +27,7 @@ export const getUploadPost = (req,res) => {
 export const postUploadPost = async(req,res) => {
     const { title, content } = req.body;
     try{
-        const newpost = await Post.create({
+        await Post.create({
             title,
             content,
             UserId: req.user.id
@@ -58,9 +58,7 @@ export const getDetailPost = async(req,res) => {
     const { id } = req.params;
     try{
         const post = await Post.findOne({
-            where: {
-                id
-            }
+            where: {id}
         });
         const user = await post.getUser();
         return res.render('../views/post/detail.pug', {pageTitle: `Title : ${post.title}`, post, user});
@@ -73,10 +71,9 @@ export const geteditPost = async(req,res) => {
     const { id } = req.params;
     try{
         const post = await Post.findOne({
-            where: {
-                id
-            }
+            where: {id}
         });
+        // session check
         if(post.UserId !== req.user.id){
             return res.redirect('/posts');
         }
@@ -90,11 +87,17 @@ export const editPost = async(req,res) => {
     const { id } = req.params;
     const { title, content } = req.body;
     try{
-        await Post.update({
+        const post = await Post.findOne({
+            where: {id}
+        });
+        // session check
+        if(post.UserId !== req.user.id){
+            return res.redirect('/posts');
+        }
+        await post.update({
             title,
             content
-        }, {where : {id}}
-        );
+        });
         return res.redirect(`/posts/${id}`);
     } catch(error){
         console.log(error);
@@ -104,11 +107,14 @@ export const editPost = async(req,res) => {
 export const deletePost = async(req,res) => {
     const { id } = req.params;
     try{
-        await Post.destroy({
-            where: {
-                id
-            }
-        });        
+        const post = await Post.findOne({
+            where: {id}
+        });
+        // session check
+        if(post.UserId !== req.user.id){
+            return res.redirect('/posts');
+        }
+        await post.destroy();
         return res.redirect('/posts');
     } catch(error){
         console.log(error);
