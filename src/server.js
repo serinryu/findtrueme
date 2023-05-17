@@ -28,9 +28,13 @@ passportConfig();
 const redisClient = createClient({
     url: `redis://${process.env.REDIS_USERNAME}:${process.env.REDIS_PASSWORD}@${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
 });
-redisClient.connect().catch(console.error);
+redisClient.on('error', err => console.log('Redis Client Error', err));
+await redisClient.connect().catch(console.error);
 const redisStore = new RedisStore({ 
     client: redisClient,
+    socket: {
+        connectTimeout: 50000,
+    },
 });
 
 app.set('port', process.env.PORT || 8001);

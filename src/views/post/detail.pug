@@ -4,7 +4,7 @@ block content
     p=post.content
     br
     p Author is..
-    p=user.username
+    a(href=`/users/${user.id}`)=user.username
 
     nav 
         a(href='/posts') Back

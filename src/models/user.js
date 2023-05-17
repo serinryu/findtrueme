@@ -4,7 +4,7 @@ const User = (sequelize, DataTypes) => {
 		{
 			email: {
 				type: DataTypes.STRING(30),
-				allowNull: false, //필수
+				allowNull: false, 
 				unique: true,
 			},
 			username: {
