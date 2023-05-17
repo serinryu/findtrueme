@@ -9,6 +9,8 @@ header
   if loggedIn
     p Logged in as #{loggedInUser.username}
     a(href='/logout') Logout
+    br
+    a(href=`/users/${loggedInUser.id}`) My page
   else
     p Not logged in
     a(href='/login') Login
