@@ -13,9 +13,9 @@ export const postJoin = async (req, res, next) => {
         return res.redirect('/join?joinError=Passwords do not match.');
     }
     try {
-        const exUser = await User.findAll({ 
+        const exUser = await User.findOne({ 
             where: { 
-                email, username 
+                email
             }
         });
         if(exUser) {

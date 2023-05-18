@@ -54,20 +54,21 @@ export const filterPost = async(req,res) => {
     }
 }
 
-export const getDetailPost = async(req,res) => {
+export const getDetail = async(req,res) => {
     const { id } = req.params;
     try{
         const post = await Post.findOne({
             where: {id}
         });
-        const user = await post.getUser();
-        return res.render('../views/post/detail.pug', {pageTitle: `Title : ${post.title}`, post, user});
+        const user = await post.getUser(); // One-to-One
+        const comments = await post.getComments(); // One-to-Many
+        return res.render('../views/post/detail.pug', {pageTitle: `Title : ${post.title}`, post, user, comments});
     } catch(error){
         console.log(error);
     }
 }
 
-export const geteditPost = async(req,res) => {
+export const geteditDetail = async(req,res) => {
     const { id } = req.params;
     try{
         const post = await Post.findOne({

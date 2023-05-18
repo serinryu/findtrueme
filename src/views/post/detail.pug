@@ -6,6 +6,16 @@ block content
     p Author is..
     a(href=`/users/${user.id}`)=user.username
 
+    h2 #{comments.length} comments
+    each comment in comments
+        p=comment.content 
+        //p=comment.created_at
+        //p=comment.UserId
+
+    form(method='post', action=`/comments/${post.id}`)
+        textarea(type='text', name='content', placeholder="Write a nice commment...")
+        input(type='submit', value='Add Comment')
+
     nav 
         a(href='/posts') Back
         a(href=`/posts/${post.id}/edit`) Edit
