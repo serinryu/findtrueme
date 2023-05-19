@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import passport from 'passport';
 import db from '../models/index.js';
+import { Op } from 'sequelize';
 const User = db.User;
 
 export const getJoin = (req, res) => {
@@ -13,9 +14,12 @@ export const postJoin = async (req, res, next) => {
         return res.redirect('/join?joinError=Passwords do not match.');
     }
     try {
-        const exUser = await User.findAll({ 
+        const exUser = await User.findOne({ 
             where: { 
-                email, username 
+                [Op.or]: [
+                    { email },
+                    { username }
+                ]
             }
         });
         if(exUser) {

@@ -9,6 +9,7 @@ const Comment = (sequelize, DataTypes) => {
             like_count: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
+                defaultValue: 0,
             },
         }, 
         {

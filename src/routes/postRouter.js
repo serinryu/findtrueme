@@ -1,5 +1,5 @@
 import express from "express";
-import { board, getUploadPost, postUploadPost, filterPost, getDetailPost, editPost, deletePost, geteditPost } from "../controllers/postController.js";
+import { board, getUploadPost, postUploadPost, filterPost, editPost, deletePost, getDetail, geteditDetail, likePost, getHashtagsPost } from "../controllers/postController.js";
 import { isLoggedIn, isNotLoggedIn } from '../middlewares/index.js';
 
 // /posts
@@ -13,14 +13,19 @@ postRouter.route('/upload')
     .post(postUploadPost);
 
 postRouter.route('/:id')
-    .get(getDetailPost)
+    .get(getDetail)
     .patch(deletePost);
     
 postRouter.route('/:id/edit')
     .all(isLoggedIn)
-    .get(geteditPost)
+    .get(geteditDetail)
     .put(editPost)
     
-postRouter.post('/:id/like', (req,res) => res.send('Like post'));
+postRouter.route('/:id/like')
+    .all(isLoggedIn)
+    .post(likePost);
+
+postRouter.route('/hashtag/:hashtag')
+    .get(getHashtagsPost);
 
 export default postRouter;
