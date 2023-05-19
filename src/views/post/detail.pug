@@ -9,8 +9,11 @@ block content
     h2 #{comments.length} comments
     each comment in comments
         p=comment.content 
+        p=comment.like_count
         //p=comment.created_at
         //p=comment.UserId
+        form(method='post', action=`/comments/${comment.id}/like`)
+            input(type='submit', value='Like')
         form(method='post', action=`/comments/${comment.id}/?_method=PATCH`)
             input(type='submit', value='Delete')
 
