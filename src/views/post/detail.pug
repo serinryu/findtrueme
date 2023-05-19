@@ -11,9 +11,12 @@ block content
         p=comment.content 
         //p=comment.created_at
         //p=comment.UserId
+        form(method='post', action=`/comments/${comment.id}/?_method=PATCH`)
+            input(type='submit', value='Delete')
 
-    form(method='post', action=`/comments/${post.id}`)
+    form(method='post', action=`/comments`)
         textarea(type='text', name='content', placeholder="Write a nice commment...")
+        input(type='hidden', name='PostId', value=`${post.id}`)
         input(type='submit', value='Add Comment')
 
     nav 
