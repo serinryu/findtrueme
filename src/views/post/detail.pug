@@ -3,13 +3,16 @@ block content
     h1=post.title
     p=post.content
     br
-    p Author is..
+    p Author is.. 
     a(href=`/users/${user.id}`)=user.username
 
     //like
     p #{likers.length} likes this post!
     form(method='post', action=`/posts/${post.id}/like`)
-        input(type='submit', value='Like')
+        if isLiker
+            input(type='submit', value='Unlike')
+        else 
+            input(type='submit', value='Like')
 
     h2 #{comments.length} comments
     each comment in comments

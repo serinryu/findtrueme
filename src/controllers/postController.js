@@ -60,10 +60,18 @@ export const getDetail = async(req,res) => {
         const post = await Post.findOne({
             where: {id}
         });
-        const user = await post.getUser(); // One-to-One
-        const comments = await post.getComments(); // One-to-Many
-        const likers = await post.getLiker(); // Many-to-Many
-        return res.render('../views/post/detail.pug', {pageTitle: `Title : ${post.title}`, post, user, likers, comments});
+        if(!post){
+            return res.status(404).render('../views/partials/404.pug', {pageTitle: 'Post is not found'});
+        };
+
+        // bring user, comments, likers to show in front-end
+        const user = await post.getUser(); 
+        const comments = await post.getComments(); 
+        const likers = await post.getLiker(); 
+        const isLiker = Boolean(likers.find((liker) => liker.id === req.user.id));
+
+        return res.render('../views/post/detail.pug', {pageTitle: `Title : ${post.title}`, post, user, likers, isLiker, comments});
+    
     } catch(error){
         console.log(error);
     }
@@ -92,6 +100,10 @@ export const editPost = async(req,res) => {
         const post = await Post.findOne({
             where: {id}
         });
+        if(!post){
+            return res.status(404).render('../views/partials/404.pug', {pageTitle: 'Post is not found'});
+        };
+
         // session check
         if(post.UserId !== req.user.id){
             return res.redirect('/posts');
@@ -112,6 +124,10 @@ export const deletePost = async(req,res) => {
         const post = await Post.findOne({
             where: {id}
         });
+        if(!post){
+            return res.status(404).render('../views/partials/404.pug', {pageTitle: 'Post is not found'});
+        };
+
         // session check
         if(post.UserId !== req.user.id){
             return res.redirect('/posts');
@@ -129,12 +145,24 @@ export const likePost = async(req,res) => {
         const post = await Post.findOne({
             where: {id}
         });
-        /* if you want to remove like
-        if(post.hasLiker(req.user.id)){
+        if(!post){
+            return res.status(404).render('../views/partials/404.pug', {pageTitle: 'Post is not found'});
+        };
+
+        // session check
+        if(post.UserId === req.user.id){
+            return res.render('../views/partials/404.pug', {pageTitle: 'You cannot like your own post'});
+        };
+
+        // backend validation
+        const likers = await post.getLiker(); // Many-to-Many
+        const isLiker = Boolean(likers.find((liker) => liker.id === req.user.id));
+        if(isLiker){
             await post.removeLiker(req.user.id);
-        } else {}
-        */
-        await post.addLiker(req.user.id);
+        } else {
+            await post.addLiker(req.user.id);
+        }
+
         return res.redirect(`/posts/${id}`);
     } catch(error){
         console.log(error);
