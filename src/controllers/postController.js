@@ -62,7 +62,8 @@ export const getDetail = async(req,res) => {
         });
         const user = await post.getUser(); // One-to-One
         const comments = await post.getComments(); // One-to-Many
-        return res.render('../views/post/detail.pug', {pageTitle: `Title : ${post.title}`, post, user, comments});
+        const likers = await post.getLiker(); // Many-to-Many
+        return res.render('../views/post/detail.pug', {pageTitle: `Title : ${post.title}`, post, user, likers, comments});
     } catch(error){
         console.log(error);
     }
@@ -117,6 +118,24 @@ export const deletePost = async(req,res) => {
         }
         await post.destroy();
         return res.redirect('/posts');
+    } catch(error){
+        console.log(error);
+    }
+}
+
+export const likePost = async(req,res) => {
+    const { id } = req.params;
+    try{
+        const post = await Post.findOne({
+            where: {id}
+        });
+        /* if you want to remove like
+        if(post.hasLiker(req.user.id)){
+            await post.removeLiker(req.user.id);
+        }
+        */
+        await post.addLiker(req.user.id);
+        return res.redirect(`/posts/${id}`);
     } catch(error){
         console.log(error);
     }

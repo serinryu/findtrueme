@@ -24,7 +24,7 @@ const Post = (sequelize, DataTypes) => {
         db.Post.belongsTo(db.User);
         db.Post.hasMany(db.Comment);
         db.Post.hasMany(db.Image);
-        db.Post.belongsToMany(db.User, { through: 'Like_Post', as: 'Liked' });
+        db.Post.belongsToMany(db.User, { through: 'Like_Post', as: 'Liker' });
         db.Post.belongsToMany(db.Hashtag, { through: 'Hashtag_Post'});
     };
     return Post;
