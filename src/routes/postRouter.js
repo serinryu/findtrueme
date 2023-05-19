@@ -1,5 +1,5 @@
 import express from "express";
-import { board, getUploadPost, postUploadPost, filterPost, editPost, deletePost, getDetail, geteditDetail, likePost } from "../controllers/postController.js";
+import { board, getUploadPost, postUploadPost, filterPost, editPost, deletePost, getDetail, geteditDetail, likePost, getHashtagsPost } from "../controllers/postController.js";
 import { isLoggedIn, isNotLoggedIn } from '../middlewares/index.js';
 
 // /posts
@@ -24,5 +24,8 @@ postRouter.route('/:id/edit')
 postRouter.route('/:id/like')
     .all(isLoggedIn)
     .post(likePost);
+
+postRouter.route('/hashtag/:hashtag')
+    .get(getHashtagsPost);
 
 export default postRouter;

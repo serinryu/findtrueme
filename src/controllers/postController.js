@@ -180,3 +180,21 @@ export const likePost = async(req,res) => {
         console.log(error);
     }
 };
+
+export const getHashtagsPost = async(req,res) => {
+    const { hashtag } = req.params;
+    try{
+        const hashtagObj = await Hashtag.findOne({
+            where: {hashtag_name: hashtag.toLowerCase()}
+        });
+        if(!hashtagObj){
+            return res.status(404).render('../views/partials/404.pug', {pageTitle: 'Hashtag is not found'});
+        };
+        
+        const posts = await hashtagObj.getPosts();
+        return res.render('../views/post/board.pug', {pageTitle: `Searching by ${hashtag}`, posts});
+    }
+    catch(error){
+        console.log(error);
+    }
+};

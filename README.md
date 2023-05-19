@@ -22,6 +22,7 @@ PATCH /posts/{:id} -> delete post
 GET /posts/{:id}/edit -> edit post form
 PUT /posts/{id}/edit -> edit post
 POST /posts/{:id}/like -> like or unlike post
+GET /posts/hashtag/{:hashtag} -> Hashtag posts
 
 [comments routers]
 POST /comments
