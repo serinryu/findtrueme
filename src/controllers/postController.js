@@ -132,11 +132,11 @@ export const likePost = async(req,res) => {
         /* if you want to remove like
         if(post.hasLiker(req.user.id)){
             await post.removeLiker(req.user.id);
-        }
+        } else {}
         */
         await post.addLiker(req.user.id);
         return res.redirect(`/posts/${id}`);
     } catch(error){
         console.log(error);
     }
-}
+};

@@ -1,5 +1,5 @@
 import express from "express";
-import { deleteProfile, getProfile, geteditProfile, editProfile } from "../controllers/userController.js";
+import { deleteProfile, getProfile, geteditProfile, editProfile, followUser } from "../controllers/userController.js";
 import { isLoggedIn, isNotLoggedIn } from '../middlewares/index.js';
 
 // /users
@@ -12,6 +12,8 @@ userRouter.route('/:id/edit')
     .all(isLoggedIn)
     .get(geteditProfile)
     .put(editProfile);
-userRouter.post('/:id/follow', (req,res) => res.send('Follow user'));
+userRouter.route('/:id/follow')
+    .all(isLoggedIn)
+    .post(followUser);
 
 export default userRouter;

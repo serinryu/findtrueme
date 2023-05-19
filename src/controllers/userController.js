@@ -80,3 +80,26 @@ export const editProfile = async(req,res) => {
     }
     
 };
+
+export const followUser = async(req,res) => {
+    const { id } = req.params;
+    try {
+        const user = await User.findOne({
+            where: {id}
+        });
+        /* 
+        if (user.hasFollowers(req.user.id)){
+            // unfollow
+            await user.removeFollowers(req.user.id); // Followers
+            await req.user.removeFollowings(parseInt(id)); // Followings
+        } else {}
+        */
+        // follow
+        await user.addFollowers(req.user.id); // Followers
+        await req.user.addFollowings(parseInt(id)); // Followings
+        
+        return res.redirect(`/users/${id}`);
+    } catch (err) {
+        console.error(err);
+    }
+};
