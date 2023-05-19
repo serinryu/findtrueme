@@ -1,7 +1,9 @@
+import { hash } from 'bcrypt';
 import db from '../models/index.js';
 import { Op } from 'sequelize';
 
 const Post = db.Post;
+const Hashtag = db.Hashtag;
 
 export const home = (req,res) => {
     return res.render('../views/post/home.pug', {pageTitle: 'Home'});
@@ -25,12 +27,20 @@ export const getUploadPost = (req,res) => {
 }
 
 export const postUploadPost = async(req,res) => {
-    const { title, content } = req.body;
+    const { title, content, hashtags } = req.body;
+    const hashtagsArr = hashtags.split(', ').map((word) => word.startsWith('#') ? word : `#${word}`);
     try{
-        await Post.create({
+        const post = await Post.create({
             title,
             content,
-            UserId: req.user.id
+            UserId: req.user.id,
+        });
+        // put hashtags in Hashtag table
+        hashtagsArr.map(async(word) => {
+            const hashtag = await Hashtag.findOrCreate({
+                where: {hashtag_name: word.slice(1).toLowerCase()}
+            });
+            await post.addHashtag(hashtag[0]); 
         });
         return res.redirect('/posts');
     } catch(error){
@@ -66,11 +76,13 @@ export const getDetail = async(req,res) => {
 
         // bring user, comments, likers to show in front-end
         const user = await post.getUser(); 
+        const hashtags = await post.getHashtags();
+        const hashtagNames = hashtags.map((hashtag) => hashtag.hashtag_name);
         const comments = await post.getComments(); 
         const likers = await post.getLiker(); 
         const isLiker = Boolean(likers.find((liker) => liker.id === req.user.id));
 
-        return res.render('../views/post/detail.pug', {pageTitle: `Title : ${post.title}`, post, user, likers, isLiker, comments});
+        return res.render('../views/post/detail.pug', {pageTitle: `Title : ${post.title}`, post, user, hashtagNames, likers, isLiker, comments});
     
     } catch(error){
         console.log(error);

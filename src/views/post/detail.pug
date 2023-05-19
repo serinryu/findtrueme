@@ -2,6 +2,9 @@ extends ../layout.pug
 block content 
     h1=post.title
     p=post.content
+    each hashtag in hashtagNames 
+        a(href=`/posts/hashtag/${hashtag}`) # #{hashtag}
+        br
     br
     p Author is.. 
     a(href=`/users/${user.id}`)=user.username
