@@ -1,0 +1,15 @@
+form(method='post', action='/posts/upload')
+
+    label(for="title") Title
+    input(type="String", placeholder="title", name="title", required)
+
+    label(for="hashtags") Hashtags
+    input(type="String", placeholder="hashtags (ex. #selfgrowth, #miraclemorning)", name="hashtags", required)
+
+    label(for="content") Content
+    textarea(type="text", placeholder="content", name="content", required)
+
+    //- label(for="image") Image
+    //- input(type="file", name="image")
+
+    input(type="submit", value="Upload")
