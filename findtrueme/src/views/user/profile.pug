@@ -1,0 +1,20 @@
+extends ../layout.pug 
+block content 
+    p=user.email
+    p=user.username
+    p Followers #{followersList} 
+    p Following #{followingsList}
+    p Posts #{posts.length}
+
+    if user.id == loggedInUser.id 
+        a(href=`/users/${user.id}/edit`) Edit my profile
+        form(method='post', action=`/users/${user.id}/?_method=PATCH`)
+            input(type='submit', value='Delete my account')
+
+    else 
+        form(method='post', action=`/users/${user.id}/follow`)
+            if isFollower 
+                input(type='submit', value='Unfollow')
+            else
+                input(type='submit', value='Follow')
+        

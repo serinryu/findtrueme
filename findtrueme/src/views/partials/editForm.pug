@@ -1,0 +1,12 @@
+form(method='post', action=`/posts/${post.id}/edit/?_method=PUT`)
+
+    label(for="title") Title
+    input(type="String", placeholder="title", name="title", value=post.title, required)
+
+    label(for="content") Content
+    textarea(type="text", placeholder="content", name="content", value=post.content, required)
+
+    //- label(for="image") Image
+    //- input(type="file", name="image")
+
+    input(type="submit", value="Upload")
