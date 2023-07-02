@@ -5,11 +5,6 @@ import db from '../models/index.js';
 import { Op } from 'sequelize';
 const User = db.User;
 
-// Need to fix this
-// export const getJoin = (req, res) => {
-//     res.render('../views/user/join', { title: 'Join' });
-// }
-
 export const signup = async (req, res, next) => {
     const { email, username, password, password2 } = req.body;
 
@@ -50,10 +45,24 @@ export const signup = async (req, res, next) => {
     }
 }
 
-// Need to fix this
-// export const getLogin = (req, res) => {
-//     res.render('../views/user/login', { title: 'Login' });
-// };
+// access token을 secret key 기반으로 생성
+const generateAccessToken = (id) => {
+    return jwt.sign({
+        id,
+    }, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: '15m',
+    });
+}
+
+// refresh token을 secret key 기반으로 생성
+const generateRefreshToken = (id) => {
+    return jwt.sign({
+        id,
+    }, process.env.REFRESH_TOKEN_SECRET, {
+        expiresIn: '7d',
+    });
+}
+
 
 export const signin = (req, res, next) => {
     passport.authenticate('local', (authError, user, info) => {
@@ -73,47 +82,51 @@ export const signin = (req, res, next) => {
                 res.send(loginError);
                 return next(loginError);
             }
+            
             // create token
-            const token = jwt.sign({
-                id: user.id,
-            }, process.env.ACCESS_TOKEN_SECRET, {
-                expiresIn: '15m',
-            });
-            console.log(token);
-            req.cookies.token = token;
-        
+            const accessToken = generateAccessToken(user.id);
+            const refreshToken = generateRefreshToken(user.id);
+
+            // res.cookie('refreshToken', refreshToken, {
+            //     httpOnly: true,
+            //     secure: false,
+            // });
+            // res.cookie('accessToken', accessToken, {
+            //     httpOnly: true,
+            //     secure: false,
+            // });
             return res.status(200).json({
                 message: 'Login successful.',
             });
         });
     }
     )(req, res, next);
-
-    /*
-    passport.authenticate('local', (authError, user, info) => {
-        if(authError) {
-            console.error(authError);
-            return next(authError);
-        }
-        if(!user) {
-            return res.redirect(`/?loginError=${info.message}`);
-        }
-        return req.login(user, (loginError) => {
-            if(loginError) {
-                console.error(loginError);
-                return next(loginError);
-            }
-            return res.redirect('/posts');
-        });
-    }
-    )(req, res, next); 
-    */
 };
 
+// access token을 refresh token 기반으로 재발급
+export const refresh = (req, res, next) => {
+    let refreshToken = req.body.refreshToken;
+    if(!refreshToken) {
+        return res.status(401).json({
+            message: 'Refresh token not found.',
+        });
+    }
+    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+        if(err) {
+            console.error(err);
+            return res.status(403).json({
+                message: 'Refresh token expired.',
+            });
+        }
+        const accessToken = generateAccessToken(user.id);
+        res.json({ accessToken });
+    });
+}
+
 export const signout = (req, res, next) => {
-    
     try {
-        req.cookies.token = null;
+        // req.cookies.refreshToken = null;
+        // req.cookies.accessToken = null;
         req.logout(function (err) { // req.logout() is added by passport, destroys req.user
             if(err) {
                 console.error(err);

@@ -1,21 +1,21 @@
 import express from "express";
-import { isLoggedIn } from "../middlewares/index.js";
-import { postComment, deleteComment, likeComment } from "../controllers/commentController.js";
+import { authenticateAccessToken } from "../middlewares/index.js";
+import { getAllComments, getCommentsByPostId, postComment, deleteComment, likeComment } from "../controllers/commentController.js";
 
 const commentRouter = express.Router();
 
-// /comments
+// /api/comments
 commentRouter.route('/')
-    .all(isLoggedIn)
-    .post(postComment); // will get postid via form(req.body) in frontend
+    .get(getAllComments) // get all comments
 
 commentRouter.route('/:id')
-    .all(isLoggedIn)
+    .get(getCommentsByPostId) // get comments by postid
+    .post(authenticateAccessToken, postComment)
+    .patch(authenticateAccessToken, deleteComment); 
     //.put(editComment)
-    .patch(deleteComment); // /comments/:commentid
 
 commentRouter.route('/:id/like')
-    .all(isLoggedIn)
+    .all(authenticateAccessToken)
     .post(likeComment);
 
 export default commentRouter;

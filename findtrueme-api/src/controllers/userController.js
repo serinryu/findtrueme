@@ -3,7 +3,6 @@ const User = db.User;
 
 export const getProfile = async(req,res) => {
     const { id } = req.params;
-    console.log(id);
     try {
         const user = await User.findOne({
             where: {
@@ -11,21 +10,15 @@ export const getProfile = async(req,res) => {
             }
         });
         if (!user) {
-            return res.status(404).render("../views/partials/404.pug", { pageTitle: "User is not found"})
-        };
-
-        // bring followers, followings, posts, comments, likedpost to show in front-end
-        const followers = await user.getFollowers();
-        const followersList = followers.map((follower) => follower.username);
-        const followings = await user.getFollowings();
-        const followingsList = followings.map((following) => following.username);
-        const posts = await user.getPosts();
-        const comments = await user.getComments();
-        const likedpost = await user.getLiked(); 
-        const isFollower = Boolean(followers.find((follower) => follower.id === req.user.id));
-
-        return res.render("../views/user/profile.pug", { pageTitle : `${user.username}'s profile`, user , followersList, followingsList, posts, comments, likedpost, isFollower});
-
+            return res.json({
+                code: 404,
+                message: 'User is not found',
+            });
+        }
+        return res.json({
+            code: 200,
+            payload: user,
+        });
     } catch (err) {
         console.error(err);
     }
@@ -34,9 +27,12 @@ export const getProfile = async(req,res) => {
 export const deleteProfile = async(req,res) => {
     const { id } = req.params;
     try {
-        // session check
+        // session check - passport
         if (parseInt(id, 10) !== req.user.id) {
-            return res.status(404).render("../views/partials/404.pug", { pageTitle: "It is not you."})
+            return res.json({
+                code: 404,
+                message: 'It is not you.',
+            });
         };
 
         await User.destroy({
@@ -45,77 +41,70 @@ export const deleteProfile = async(req,res) => {
             }
         });
 
-        // session logout
+        // session logout - passport
         req.logout();
 
-        return res.redirect("/");
-    } catch (err) {
-        console.error(err);
-    }
-};
-
-export const geteditProfile = async(req,res) => {
-    const { id } = req.params;
-    try {
-        //session check
-        if (parseInt(id, 10) !== req.user.id) {
-            return res.status(404).render("../views/partials/404.pug", { pageTitle: "It is not you."})
-        };
-
-        const user = await User.findOne({
-            where: {id}
+        return res.json({
+            code: 200,
+            message: 'User is deleted.',
         });
-        if (!user) {
-            return res.status(404).render("../views/partials/404.pug", { pageTitle: "User is not found"})
-        };
-
-        return res.render("../views/user/editProfile.pug", { pageTitle : `${user.username}'s profile`, user , user});
     } catch (err) {
         console.error(err);
     }
 };
-
 
 export const editProfile = async(req,res) => {
     const { id } = req.params;
-    const { email } = req.body;
+    const { email } = req.body; // only email
+
     try {
         // session check
         if (parseInt(id, 10) !== req.user.id) {
-            return res.status(404).render("../views/partials/404.pug", { pageTitle: "It is not you."})
+            return res.json({
+                code: 404,
+                message: 'It is not you.',
+            });
         };
-
         const user = await User.findOne({
-            where: { email } 
+            where: { email }
         });
         if (user) {
-            return res.status(400).render("../views/partials/404.pug", { pageTitle: "This email is already taken."});
+            return res.json({
+                code: 400,
+                message: 'This email is already taken.',
+            });
         };
-
         await User.update({
             email,
-            }, {where: {id}}
-        );
-        return res.redirect(`/users/${id}`);
+        }, { where: { id } });
+        return res.json({
+            code: 200,
+            message: 'User is updated.',
+        });
     } catch (err) {
         console.error(err);
     }
-    
 };
 
 export const followUser = async(req,res) => {
     const { id } = req.params;
+
     try {
         // session check
         if(parseInt(id, 10) !== req.user.id) {
-            return res.status(400).render("../views/partials/404.pug", { pageTitle: "You cannot follow yourself."});
+            return res.json({
+                code: 400,
+                message: 'You cannot follow yourself.',
+            });
         };
-
         const user = await User.findOne({
             where: {id}
         });
         if (!user) {
-            return res.status(404).render("../views/partials/404.pug", { pageTitle: "User is not found"})
+            return res.json({
+                code: 404,
+                message: 'User is not found',
+            });
         };
 
         // backend validation
@@ -125,13 +114,19 @@ export const followUser = async(req,res) => {
             // unfollow
             await user.removeFollowers(req.user.id); // Followers
             await req.user.removeFollowings(parseInt(id)); // Followings
+            return res.json({
+                code: 200,
+                message: 'Unfollowed.',
+            });
         } else {
             // follow
             await user.addFollowers(req.user.id); // Followers
             await req.user.addFollowings(parseInt(id)); // Followings
+            return res.json({
+                code: 200,
+                message: 'Followed.',
+            });
         }
-
-        return res.redirect(`/users/${id}`);
     } catch (err) {
         console.error(err);
     }

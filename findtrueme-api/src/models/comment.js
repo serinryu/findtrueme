@@ -4,7 +4,7 @@ const Comment = (sequelize, DataTypes) => {
         {
             content: {
                 type: DataTypes.STRING(400),
-                allowNull: true,
+                allowNull: false,
             },
             like_count: {
                 type: DataTypes.INTEGER,

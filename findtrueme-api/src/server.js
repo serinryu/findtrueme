@@ -62,11 +62,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(localsMiddleware)
 
-app.use('/', globalRouter);
-app.use('/', authRouter);
-app.use('/users', userRouter);
-app.use('/posts', postRouter);
-app.use('/comments', commentRouter);
+app.use('/api', globalRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/users', userRouter);
+app.use('/api/posts', postRouter);
+app.use('/api/comments', commentRouter);
 
 db.sequelize
     .sync({ alter: false, force: false })

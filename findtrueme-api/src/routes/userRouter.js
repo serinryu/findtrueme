@@ -1,19 +1,18 @@
 import express from "express";
-import { deleteProfile, getProfile, geteditProfile, editProfile, followUser } from "../controllers/userController.js";
-import { isLoggedIn, isNotLoggedIn } from '../middlewares/index.js';
+import { deleteProfile, getProfile, editProfile, followUser } from "../controllers/userController.js";
+import { authenticateAccessToken } from '../middlewares/index.js';
 
 // /users
 const userRouter = express.Router();
+
 userRouter.route('/:id')
-    .all(isLoggedIn)
+    .all(authenticateAccessToken)
     .get(getProfile)
-    .patch(deleteProfile);
-userRouter.route('/:id/edit')
-    .all(isLoggedIn)
-    .get(geteditProfile)
-    .put(editProfile);
+    .patch(deleteProfile)
+    .put(editProfile); // email
+
 userRouter.route('/:id/follow')
-    .all(isLoggedIn)
+    .all(authenticateAccessToken)
     .post(followUser);
 
 export default userRouter;

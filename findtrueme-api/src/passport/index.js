@@ -5,19 +5,22 @@ const User = db.User;
 
 export default () => {
 
-    /*
-    로그인 시 세션을 사용한다면 아래의 코드를 넣어줘야한다. 
-    보안상 세션이 더 유리하다고 하지만 약간이나마 부담을 덜기 위해 쿠키로 사용하는 방법도 고려해보자.
-    */
+    // Passport 로 로그인 시 세션을 사용한다면 아래의 코드를 넣어줘야한다. 
+    // 하지만, 현재 세션을 사용하지 않고 토큰으로 인증하고 있으므로 수정 필요.
+
+    // login이 최초로 성공했을 때만 호출되는 함수
     passport.serializeUser((user, done) => {
         done(null, user.id); // 세션 객체에 어떤 데이터를 저장할지(user.id)
     });
     
+    // 사용자가 페이지를 방문할 때마다 호출되는 함수
     passport.deserializeUser((id, done) => {
         User.findOne({ where: { id } })
         .then((user) => done(null, user)) // 세션에 저장한 아이디로 사용자 정보를 조회
         .catch((err) => done(err));
     });
     
+    
+
     local();
 };

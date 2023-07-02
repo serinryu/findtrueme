@@ -1,36 +1,27 @@
 import express from "express";
-import { board, getUploadPost, postUploadPost, filterPost, editPost, deletePost, getDetail, geteditDetail, likePost, getHashtagsPost } from "../controllers/postController.js";
-import { isLoggedIn, isNotLoggedIn } from '../middlewares/index.js';
+import { board, getUploadPost, filterPost, editPost, deletePost, getDetail, likePost, getHashtagsPost } from "../controllers/postController.js";
+import { authenticateAccessToken } from '../middlewares/index.js';
 
-// /posts
+// /api/posts
 const postRouter = express.Router();
 
-postRouter.get('/', board)
+postRouter.route('/')
+    .get(board)
+    .post(authenticateAccessToken, getUploadPost);
+
 postRouter.get('/search', filterPost);
 
 postRouter.route('/hashtag/:hashtag')
     .get(getHashtagsPost);
 
-/*
-IsLoggedIn 미들웨어를 사용하여 로그인 여부를 확인하는 로직
-*/
-postRouter.route('/upload')
-    .all(isLoggedIn)
-    .get(getUploadPost)
-    .post(postUploadPost);
-
 postRouter.route('/:id')
-    .all(isLoggedIn)
+    .all(authenticateAccessToken)
     .get(getDetail)
-    .patch(deletePost);
-    
-postRouter.route('/:id/edit')
-    .all(isLoggedIn)
-    .get(geteditDetail)
-    .put(editPost)
+    .patch(deletePost)
+    .put(editPost);
     
 postRouter.route('/:id/like')
-    .all(isLoggedIn)
+    .all(authenticateAccessToken)
     .post(likePost);
 
 export default postRouter;
