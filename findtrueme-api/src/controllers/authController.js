@@ -1,6 +1,5 @@
 import bcrypt from 'bcrypt';
 import passport from 'passport';
-import jwt from 'jsonwebtoken';
 import db from '../models/index.js';
 import { Op } from 'sequelize';
 const User = db.User;
@@ -45,25 +44,6 @@ export const signup = async (req, res, next) => {
     }
 }
 
-// access token을 secret key 기반으로 생성
-const generateAccessToken = (id) => {
-    return jwt.sign({
-        id,
-    }, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: '15m',
-    });
-}
-
-// refresh token을 secret key 기반으로 생성
-const generateRefreshToken = (id) => {
-    return jwt.sign({
-        id,
-    }, process.env.REFRESH_TOKEN_SECRET, {
-        expiresIn: '7d',
-    });
-}
-
-
 export const signin = (req, res, next) => {
     passport.authenticate('local', (authError, user, info) => {
         // auth error or user not found
@@ -82,51 +62,16 @@ export const signin = (req, res, next) => {
                 res.send(loginError);
                 return next(loginError);
             }
-            
-            // create token
-            const accessToken = generateAccessToken(user.id);
-            const refreshToken = generateRefreshToken(user.id);
-
-            // res.cookie('refreshToken', refreshToken, {
-            //     httpOnly: true,
-            //     secure: false,
-            // });
-            // res.cookie('accessToken', accessToken, {
-            //     httpOnly: true,
-            //     secure: false,
-            // });
             return res.status(200).json({
-                message: 'Login successful.',
+                message: 'Login successful. You can register domain now.',
             });
         });
     }
-    )(req, res, next);
+    )(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
 };
 
-// access token을 refresh token 기반으로 재발급
-export const refresh = (req, res, next) => {
-    let refreshToken = req.body.refreshToken;
-    if(!refreshToken) {
-        return res.status(401).json({
-            message: 'Refresh token not found.',
-        });
-    }
-    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-        if(err) {
-            console.error(err);
-            return res.status(403).json({
-                message: 'Refresh token expired.',
-            });
-        }
-        const accessToken = generateAccessToken(user.id);
-        res.json({ accessToken });
-    });
-}
-
 export const signout = (req, res, next) => {
-    try {
-        // req.cookies.refreshToken = null;
-        // req.cookies.accessToken = null;
+    try { 
         req.logout(function (err) { // req.logout() is added by passport, destroys req.user
             if(err) {
                 console.error(err);

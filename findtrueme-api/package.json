@@ -1,8 +1,8 @@
 {
-  "name": "findtrueme",
+  "name": "findtrueme-api",
   "version": "1.0.0",
   "type": "module",
-  "description": "",
+  "description": "findtrueme api server",
   "main": "init.js",
   "scripts": {
     "start": "nodemon --exec babel-node src/init.js"
@@ -31,7 +31,7 @@
     "mysql2": "^3.2.3",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
-    "pug": "^3.0.2",
+    "nunjucks": "^3.2.1",
     "redis": "^4.6.6",
     "sequelize": "^6.31.0",
     "sequelize-cli": "^6.6.0"
