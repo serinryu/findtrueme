@@ -13,6 +13,7 @@ import {createClient} from "redis";
 import passportConfig from './passport/index.js';
 
 import v1 from './routes/v1.js';
+import v2 from './routes/v2.js';
 import indexRouter from './routes/indexRouter.js';
 import authRouter from './routes/authRouter.js';
 
@@ -61,9 +62,10 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/api/v1', v1);
 app.use('/api', indexRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/v1', v1);
+app.use('/api/v2', v2);
 
 db.sequelize
     .sync({ alter: false, force: false })

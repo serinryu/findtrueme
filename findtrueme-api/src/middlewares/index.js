@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import RateLimit, { rateLimit } from 'express-rate-limit';
 
 /*
 Session-based authentication
@@ -54,3 +55,15 @@ export const deprecated = (req, res) => {
         message: 'New version is available. Please update.',
     });
 };
+
+export const apiLimiter = rateLimit({
+    windowMs: 60 * 1000, // 1 minute
+    max: 10, // 1 minute 동안 최대 10번 요청 가능
+    delayMs: 0,
+    handler(req, res) {
+        res.status(this.statusCode).json({
+            code: this.statusCode, // 기본값 429
+            message: 'Too many requests. Please try again later.',
+        });
+    }
+});
