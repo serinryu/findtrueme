@@ -53,13 +53,5 @@ export const searchByHashtag = async (req, res, next) => {
 };
 
 export const renderMain = async (req, res) => {
-    try {
-        const tokenResult = await axios.post(`${URL}/token`, {
-            clientSecret: process.env.CLIENT_SECRET,
-        });
-        return res.json(tokenResult.data);
-    } catch (error) {
-        console.error(error);
-        return;
-    }
+    return res.render('main', { key: process.env.CLIENT_SECRET });
 };
