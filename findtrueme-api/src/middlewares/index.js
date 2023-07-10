@@ -29,18 +29,20 @@ Token-based authentication
 
 export const verifyToken = (req, res, next) => {
     try {
-        res.locals.decoded = jwt.verify(req.headers.authorization, process.env.JWT_SECRET);
+        // token should be sent in the header of the request
+        // req.headers.authorization = 'Bearer <token>'
+        res.locals.decoded = jwt.verify(req.headers.authorization.split(' ')[1], process.env.JWT_SECRET);
         return next();
     } catch (error) {
         if (error.name === 'TokenExpiredError') { // 유효기간 초과
             return res.status(419).json({
             code: 419,
-            message: '토큰이 만료되었습니다',
+            message: 'Token has expired.',
             });
         }
         return res.status(401).json({
             code: 401,
-            message: '유효하지 않은 토큰입니다',
+            message: 'Token is not valid.',
         });
     }
 };

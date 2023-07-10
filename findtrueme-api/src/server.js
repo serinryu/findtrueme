@@ -12,6 +12,7 @@ import RedisStore from "connect-redis";
 import {createClient} from "redis";
 import passportConfig from './passport/index.js';
 
+import v1 from './routes/v1.js';
 import indexRouter from './routes/indexRouter.js';
 import authRouter from './routes/authRouter.js';
 
@@ -60,6 +61,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use('/api/v1', v1);
 app.use('/api', indexRouter);
 app.use('/api/auth', authRouter);
 
