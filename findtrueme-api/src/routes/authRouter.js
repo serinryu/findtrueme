@@ -4,13 +4,13 @@ import { isLoggedIn, isNotLoggedIn } from '../middlewares/index.js';
 
 const authRouter = express.Router();
 
-// POST /auth/signup
+// POST api/auth/signup
 authRouter.post('/signup', isNotLoggedIn, signup);
 
-// POST /auth/signin
+// POST api/auth/signin
 authRouter.post('/signin', isNotLoggedIn, signin);
 
-// GET /auth/signout
+// GET api/auth/signout
 authRouter.get('/signout', isLoggedIn, signout);
 
 export default authRouter;

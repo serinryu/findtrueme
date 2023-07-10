@@ -1,12 +1,14 @@
 import jwt from 'jsonwebtoken';
-import RateLimit, { rateLimit } from 'express-rate-limit';
+import { rateLimit } from 'express-rate-limit';
+import cors from 'cors';
+import db from '../models/index.js';
+const Domain = db.Domain;
 
 /*
 Session-based authentication
 This is a middleware function that checks if the user is logged in or not.
 Passport.js provides req.isAuthenticated() method.
 */
-
 export const isLoggedIn = (req, res, next) => {
     if (req.isAuthenticated()) { 
         next();
@@ -23,11 +25,9 @@ export const isNotLoggedIn = (req, res, next) => {
     }
 }
 
-
 /*
 Token-based authentication
 */
-
 export const verifyToken = (req, res, next) => {
     try {
         // token should be sent in the header of the request
@@ -67,3 +67,23 @@ export const apiLimiter = rateLimit({
         });
     }
 });
+
+export const corsWhenDomainMatches = async (req, res, next) => {
+    const domain = await Domain.findOne({
+        where: { host : new URL(req.get('origin')).host }, 
+    });
+    console.log(new URL(req.get('origin')).host);
+    if (domain) {
+        cors({
+            origin: req.get('origin'),
+            credentials: true,
+        })(req, res, next);
+    }
+    else {
+        // CORS error in the browser
+        return res.status(401).json({
+            code: 401,
+            message: 'Not registered domain. Register domain first.',
+        });
+    }
+};
