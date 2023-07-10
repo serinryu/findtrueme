@@ -53,5 +53,7 @@ export const searchByHashtag = async (req, res, next) => {
 };
 
 export const renderMain = async (req, res) => {
+    // 브라우저에서 API 서버로 직접 요청을 보내므로 서버-브라우저 간 요청/응답임. -> CORS 문제 발생
+    // CORS 문제 해결을 위해, API 서버 측 코드 수정 필요. (해당 도메인에서의 요청을 허용하도록)
     return res.render('main', { key: process.env.CLIENT_SECRET });
 };
