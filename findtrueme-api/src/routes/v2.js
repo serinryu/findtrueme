@@ -1,8 +1,10 @@
 import express from 'express';
 import { createToken, tokenTest, getMyPosts, getPostsByHashtag } from '../controllers/v1.js';
-import { verifyToken, apiLimiter } from '../middlewares/index.js';
+import { verifyToken, apiLimiter, corsWhenDomainMatches } from '../middlewares/index.js';
 
 const router = express.Router();
+
+router.use(corsWhenDomainMatches);
 
 // POST /api/v2/token
 router.post('/token', apiLimiter, createToken);
