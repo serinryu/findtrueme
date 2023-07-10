@@ -1,4 +1,5 @@
 import Sequelize from "sequelize";
+import Domain from "./domain.js";
 import User from "./user.js";
 import Post from "./post.js";
 import Hashtag from "./hashtag.js";
@@ -15,6 +16,7 @@ const sequelize = new Sequelize(
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
+db.Domain = Domain(sequelize, Sequelize);
 db.User = User(sequelize, Sequelize);
 db.Post = Post(sequelize, Sequelize);
 db.Hashtag = Hashtag(sequelize, Sequelize);

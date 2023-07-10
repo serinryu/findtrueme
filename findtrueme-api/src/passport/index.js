@@ -5,8 +5,7 @@ const User = db.User;
 
 export default () => {
 
-    // Passport 로 로그인 시 세션을 사용한다면 아래의 코드를 넣어줘야한다. 
-    // 하지만, 현재 세션을 사용하지 않고 토큰으로 인증하고 있으므로 수정 필요.
+    // Passport 로 로그인 시 세션을 사용한다면 serializeUser, deserializeUser 함수를 정의해야 한다.
 
     // login이 최초로 성공했을 때만 호출되는 함수
     passport.serializeUser((user, done) => {
@@ -20,7 +19,5 @@ export default () => {
         .catch((err) => done(err));
     });
     
-    
-
     local();
 };

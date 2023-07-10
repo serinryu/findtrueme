@@ -2,6 +2,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import passport from 'passport';
+import nunjucks from 'nunjucks';
 import * as dotenv from 'dotenv';
 import methodOverride from 'method-override';
 
@@ -10,14 +11,11 @@ import session from 'express-session';
 import RedisStore from "connect-redis";
 import {createClient} from "redis";
 import passportConfig from './passport/index.js';
-import { localsMiddleware } from './middlewares/index.js';
 
-import globalRouter from './routes/globalRouter.js';
+import v1 from './routes/v1.js';
+import v2 from './routes/v2.js';
+import indexRouter from './routes/indexRouter.js';
 import authRouter from './routes/authRouter.js';
-import userRouter from './routes/userRouter.js';
-import postRouter from './routes/postRouter.js';
-import commentRouter from './routes/commentRouter.js';
-
 
 dotenv.config();
 const app = express();
@@ -38,8 +36,11 @@ const redisStore = new RedisStore({
 });
 
 app.set('port', process.env.PORT || 8002);
-app.set('view engine', 'pug');
-app.set("views", process.cwd() + "/src/views");
+app.set('view engine', 'html');
+nunjucks.configure(process.cwd() + "/src/views", {
+    express: app,
+    watch: true,
+});
 
 //middleware
 app.use(morgan('dev'));
@@ -60,13 +61,11 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(localsMiddleware)
 
-app.use('/api', globalRouter);
+app.use('/api', indexRouter);
 app.use('/api/auth', authRouter);
-app.use('/api/users', userRouter);
-app.use('/api/posts', postRouter);
-app.use('/api/comments', commentRouter);
+app.use('/api/v1', v1);
+app.use('/api/v2', v2);
 
 db.sequelize
     .sync({ alter: false, force: false })

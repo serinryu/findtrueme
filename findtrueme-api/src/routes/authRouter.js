@@ -1,15 +1,16 @@
 import express from "express";
-import { signup, signin, signout, refresh } from '../controllers/authController.js';
-import { authenticateAccessToken } from '../middlewares/index.js';
+import { signup, signin, signout } from '../controllers/authController.js';
+import { isLoggedIn, isNotLoggedIn } from '../middlewares/index.js';
 
 const authRouter = express.Router();
 
-authRouter.post('/signup', signup);
+// POST /auth/signup
+authRouter.post('/signup', isNotLoggedIn, signup);
 
-authRouter.post('/signin', signin);
+// POST /auth/signin
+authRouter.post('/signin', isNotLoggedIn, signin);
 
-authRouter.get('/signout', authenticateAccessToken, signout);
-
-authRouter.post('/refresh', refresh);
+// GET /auth/signout
+authRouter.get('/signout', isLoggedIn, signout);
 
 export default authRouter;
