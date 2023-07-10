@@ -40,6 +40,7 @@ export const verifyToken = (req, res, next) => {
             message: 'Token has expired.',
             });
         }
+        // 유효하지 않은 토큰
         return res.status(401).json({
             code: 401,
             message: 'Token is not valid.',
