@@ -1,8 +1,10 @@
 import express from 'express';
 import { createToken, tokenTest, getMyPosts, getPostsByHashtag } from '../controllers/v1.js';
-import { verifyToken } from '../middlewares/index.js';
+import { verifyToken, deprecated } from '../middlewares/index.js';
 
 const router = express.Router();
+
+router.use(deprecated);
 
 // POST /api/v1/token
 router.post('/token', createToken);

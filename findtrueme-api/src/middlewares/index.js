@@ -47,3 +47,10 @@ export const verifyToken = (req, res, next) => {
         });
     }
 };
+
+export const deprecated = (req, res) => {
+    res.status(410).json({
+        code: 410,
+        message: 'New version is available. Please update.',
+    });
+};
