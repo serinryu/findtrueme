@@ -4,7 +4,6 @@ import morgan from 'morgan';
 import passport from 'passport';
 import nunjucks from 'nunjucks';
 import * as dotenv from 'dotenv';
-import methodOverride from 'method-override';
 
 import db from './models/index.js';
 import session from 'express-session';
@@ -44,7 +43,6 @@ nunjucks.configure(process.cwd() + "/src/views", {
 
 //middleware
 app.use(morgan('dev'));
-app.use(methodOverride('_method'));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser(process.env.COOKIE_SECRET));
