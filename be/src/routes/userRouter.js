@@ -23,10 +23,10 @@ userRouter.route('/:id')
 
 // PUT /api/users/:id
 userRouter.route('/:id')
-    .all(isLoggedIn) // Permission : IsOwner 로 수정
+    .all(isLoggedIn) 
     .put(editProfile);
 
-// /api/users/:id/follow
+// POST /api/users/:id/follow
 userRouter.route('/:id/follow')
     .all(isLoggedIn)
     .post(followUser);

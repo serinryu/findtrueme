@@ -10,7 +10,6 @@ import session from 'express-session';
 import RedisStore from "connect-redis";
 import {createClient} from "redis";
 import passportConfig from './passport/index.js';
-import { localsMiddleware } from './middlewares/index.js';
 
 import globalRouter from './routes/globalRouter.js';
 import authRouter from './routes/authRouter.js';
@@ -60,7 +59,6 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(localsMiddleware)
 
 app.use('/', globalRouter);
 app.use('/account', authRouter);

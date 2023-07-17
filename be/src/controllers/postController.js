@@ -34,7 +34,6 @@ export const uploadPost = async(req,res) => {
             await post.addHashtag(hashtag[0]); 
         });
         return res.status(201).json({ message : "Post created successfully"});
-        //return res.redirect('/posts');
     } catch(error){
         console.log(error);
     }
@@ -47,7 +46,7 @@ export const getDetail = async(req,res) => {
             where: {id}
         });
         if(!post){
-            return res.status(404).json({ message : "Post is not found"});
+            return res.status(404).json({ error : "Post is not found"});
         };
 
         // bring user, comments, likers to show in front-end
@@ -73,13 +72,14 @@ export const editPost = async(req,res) => {
             where: {id}
         });
         if(!post){
-            return res.status(404).json({ message : "Post is not found" });
+            return res.status(404).json({ error : "Post is not found" });
         };
 
-        // session check
+        // IsPostOwner
         if(post.UserId !== req.user.id){
             return res.status(403).json({ message : "You are not allowed to edit this post" });
         }
+        
         await post.update({
             title,
             content
@@ -97,13 +97,14 @@ export const deletePost = async(req,res) => {
             where: {id}
         });
         if(!post){
-            return res.status(404).json({ message : "Post is not found" });
+            return res.status(404).json({ error : "Post is not found" });
         };
 
-        // session check
+        // IsPostOwner
         if(post.UserId !== req.user.id){
             return res.status(403).json({ message : "You are not allowed to delete this post" });
         }
+
         await post.destroy();
         return res.status(200).json({ message : "Post deleted successfully" });
     } catch(error){
@@ -121,7 +122,7 @@ export const likePost = async(req,res) => {
             return res.status(404).json({ message : "Post is not found" });
         };
 
-        // session check
+        // isNotPostOwner
         if(post.UserId === req.user.id){
             return res.status(404).json({ message : "You cannot like your own post" });
         };
@@ -163,7 +164,7 @@ export const getHashtagsPost = async(req,res) => {
             where: {hashtag_name: hashtag.toLowerCase()}
         });
         if(!hashtagObj){
-            return res.status(404).json({ message : "Hashtag is not found"});
+            return res.status(404).json({ error : "Hashtag is not found"});
         };
         
         const posts = await hashtagObj.getPosts();

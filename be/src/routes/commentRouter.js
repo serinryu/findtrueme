@@ -11,7 +11,7 @@ commentRouter.route('/')
 
 // PATCH /api/comments/:commentid
 commentRouter.route('/:id')
-    .all(isLoggedIn) // Permission : IsOwner 로 수정
+    .all(isLoggedIn) // isCommentOwner 
     .patch(deleteComment); 
 
 // POST /api/comments/:commentid/like

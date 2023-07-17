@@ -13,16 +13,19 @@ postRouter.route('/')
     .post(uploadPost);
 
 // GET /api/posts/:id 
-// PUT /api/posts/:id
+postRouter.route('/:id')
+    .all(isLoggedIn)
+    .get(getDetail);
+
 // PATCH /api/posts/:id
 postRouter.route('/:id')
-    .get(getDetail)
+    .all(isLoggedIn)  // isPostOwner
     .put(editPost)
     .patch(deletePost);
     
 // POST /api/posts/:id/like
 postRouter.route('/:id/like')
-    .all(isLoggedIn)
+    .all(isLoggedIn)  // isNotPostOwner
     .post(likePost);
 
 // GET /api/posts/search

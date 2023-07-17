@@ -10,7 +10,7 @@ export const postComment = async (req, res, next) => {
             PostId,
             UserId: req.user.id,
         });
-        return res.status(201).json({ message: "Comment created successfully" });
+        return res.status(201).json({ message : "Comment created successfully" });
         //return res.redirect(`/posts/${PostId}`);
     } catch (err) {
         console.error(err);
@@ -25,7 +25,7 @@ export const deleteComment = async (req, res, next) => {
         });
         //session check
         if(comment.UserId !== req.user.id){
-            return res.status(404).json({ message: "Session is not matched. Login again." });
+            return res.status(404).json({ error : "Session is not matched. Login again." });
         };
         await comment.destroy();
         return res.status(200).json({ message: "Comment deleted successfully" });
@@ -46,7 +46,7 @@ export const likeComment = async (req, res, next) => {
         await comment.update({
             like_count : comment.like_count + 1,
         });
-        return res.status(200).json({ message: "Comment liked successfully" });
+        return res.status(200).json({ message : "Comment liked successfully" });
         //return res.redirect(`/posts/${comment.PostId}`);
     } catch (err) {
         console.error(err);

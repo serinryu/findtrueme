@@ -9,8 +9,7 @@ export const login = (req, res, next) => {
             return next(authError);
         }
         if(!user) {
-            return res.status(401).json({ message: info.message });
-            // res.redirect(`/?loginError=${info.message}`);
+            return res.status(401).json({ error : 'Login failed'});
         }
         return req.login(user, (loginError) => {
             if(loginError) {
@@ -30,6 +29,7 @@ export const logout = (req, res, next) => {
     });
 }
 
-export const refresh = (req, res, next) => {
-};
+// Token based authentication
+// export const refresh = (req, res, next) => {
+// }
 

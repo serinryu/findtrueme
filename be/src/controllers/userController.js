@@ -6,7 +6,7 @@ const User = db.User;
 export const signup = async (req, res) => {
     const { email, username, password, password2 } = req.body;
     if(password !== password2) {
-        return res.status(400).json({ message: "Passwords do not match." });
+        return res.status(400).json({ error : "Passwords do not match." });
     }
     try {
         const exUser = await User.findOne({ 
@@ -18,7 +18,7 @@ export const signup = async (req, res) => {
             }
         });
         if(exUser) {
-            return res.status(409).json({ message: "User already exists." });
+            return res.status(409).json({ error : "User already exists." });
         }
         const hash = await bcrypt.hash(password, 12);
         await User.create({
@@ -26,7 +26,7 @@ export const signup = async (req, res) => {
             username,
             password: hash,
         });
-        return res.render('login', { message: "Signup successfully. Please login." });
+        return res.render('login', { message : "Signup successfully. Please login." });
     } catch(error) {
         console.error(error);
     }
@@ -51,7 +51,7 @@ export const getProfile = async(req,res) => {
             }
         });
         if (!user) {
-            return res.status(404).json({ message: "User is not found" });    
+            return res.status(404).json({ error : "User is not found" });    
         };
 
         // bring followers, followings, posts, comments, likedpost to show in front-end
@@ -76,7 +76,7 @@ export const deleteProfile = async(req,res) => {
     try {
         // session check
         if (parseInt(id, 10) !== req.user.id) {
-            return res.status(404).json({ message: "Session is not matched. Login again." });
+            return res.status(404).json({ error : "Session is not matched. Login again." });
         };
 
         await User.destroy({
@@ -88,7 +88,7 @@ export const deleteProfile = async(req,res) => {
         // session logout
         req.logout();
         req.session.destroy();
-        return res.status(200).json({ message: "User is deleted." });
+        return res.status(200).json({ message : "User is deleted." });
         //return res.redirect("/");
     } catch (err) {
         console.error(err);
@@ -102,21 +102,21 @@ export const editProfile = async(req,res) => {
     try {
         // session check
         if (parseInt(id, 10) !== req.user.id) {
-            return res.status(404).json({ message: "Session is not matched. Login again." });
+            return res.status(404).json({ error : "Session is not matched. Login again." });
         };
 
         const user = await User.findOne({
             where: { email } 
         });
         if (user) {
-            return res.status(409).json({ message: "Email already exists." })
+            return res.status(409).json({ error : "Email already exists." })
         };
 
         await User.update({
             email,
             }, {where: {id}}
         );
-        return res.status(200).json({ message: "User is updated." });
+        return res.status(200).json({ message : "User is updated." });
         //return res.redirect(`/users/${id}`);
     } catch (err) {
         console.error(err);
@@ -129,14 +129,14 @@ export const followUser = async(req,res) => {
     try {
         // session check
         if(parseInt(id, 10) == req.user.id) {
-            return res.status(404).json({ message: "You cannot follow yourself." });
+            return res.status(404).json({ error : "You cannot follow yourself." });
         };
 
         const user = await User.findOne({
             where: {id}
         });
         if (!user) {
-            return res.status(404).json({ message: "User is not found" });
+            return res.status(404).json({ error : "User is not found" });
         };
 
         // backend validation
@@ -152,7 +152,7 @@ export const followUser = async(req,res) => {
             await req.user.addFollowings(parseInt(id)); // Followings
         }
 
-        return res.status(200).json({ message: "Follow successfully" });
+        return res.status(200).json({ message : "Follow successfully" });
         //return res.redirect(`/users/${id}`);
     } catch (err) {
         console.error(err);

@@ -16,10 +16,10 @@ export default () => {
                     if(result) {
                         done(null, exUser);
                     } else {
-                        done(null, false, { message: 'password is not correct.'});
+                        done(null, false, { error : 'password is not correct.'});
                     }
                 } else {
-                    done(null, false, { message: 'email is not registered.'});
+                    done(null, false, { error : 'email is not registered.'});
                 }
             } catch (error) {
                 console.error(error);
